@@ -1,0 +1,804 @@
+<html>
+<head>
+<title>Controller.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6897bb;}
+.s3 { color: #808080;}
+.s4 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Controller.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">sample</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">javafx.fxml.FXML</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.control.Button</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.control.Label</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.control.ListView</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.image.Image</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.image.ImageView</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.text.Text</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">javax.xml.transform.Source</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.lang.reflect.Array</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.ArrayList</span><span class="s0">;</span>
+
+<span class="s0">public class </span><span class="s1">Controller {</span>
+    <span class="s0">private final </span><span class="s1">ArrayList&lt;Player&gt; players = </span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;()</span><span class="s0">;</span>
+    <span class="s0">private final </span><span class="s1">ArrayList&lt;Opponents&gt; opponents = </span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;()</span><span class="s0">;</span>
+    <span class="s1">@FXML</span>
+    <span class="s1">ListView peopleList</span><span class="s0">, </span><span class="s1">skill_upgrade</span><span class="s0">;</span>
+    <span class="s1">@FXML</span>
+    <span class="s1">ImageView playerImage</span><span class="s0">, </span><span class="s1">p1battle</span><span class="s0">, </span><span class="s1">p2battle</span><span class="s0">;</span>
+    <span class="s1">@FXML</span>
+    <span class="s1">Text choosePlayerText</span><span class="s0">, </span><span class="s1">notification</span><span class="s0">, </span><span class="s1">versus</span><span class="s0">, </span><span class="s1">score_text</span><span class="s0">, </span><span class="s1">divider</span><span class="s0">, </span><span class="s1">your_stats</span><span class="s0">;</span>
+    <span class="s1">@FXML</span>
+    <span class="s1">Button choosePlayerButton</span><span class="s0">, </span><span class="s1">layup</span><span class="s0">, </span><span class="s1">dunk</span><span class="s0">, </span><span class="s1">midrange</span><span class="s0">, </span><span class="s1">threePoint</span><span class="s0">, </span><span class="s1">opp_offense</span><span class="s0">, </span><span class="s1">next_battle</span><span class="s0">;</span>
+    <span class="s1">@FXML</span>
+    <span class="s1">Label name_label</span><span class="s0">, </span><span class="s1">school_label</span><span class="s0">, </span><span class="s1">position_label</span><span class="s0">, </span><span class="s1">height_label</span><span class="s0">, </span><span class="s1">skills_label</span><span class="s0">, </span><span class="s1">weakness_label</span><span class="s0">,</span>
+            <span class="s1">p1name</span><span class="s0">, </span><span class="s1">p2name</span><span class="s0">, </span><span class="s1">hero_score</span><span class="s0">, </span><span class="s1">opp_score</span><span class="s0">, </span><span class="s1">show_winner</span><span class="s0">, </span><span class="s1">rating_stats</span><span class="s0">, </span><span class="s1">layup_stats</span><span class="s0">, </span><span class="s1">power_stats</span><span class="s0">,</span>
+            <span class="s1">midrange_stats</span><span class="s0">, </span><span class="s1">three_point_stats</span><span class="s0">, </span><span class="s1">players_beat</span><span class="s0">, </span><span class="s1">players_lost</span><span class="s0">;</span>
+    <span class="s0">private </span><span class="s1">Player hero</span><span class="s0">;</span>
+    <span class="s0">private </span><span class="s1">Opponents opp</span><span class="s0">;</span>
+    <span class="s0">private int </span><span class="s1">heroScore = </span><span class="s2">0</span><span class="s0">;</span>
+    <span class="s0">private int </span><span class="s1">oppScore = </span><span class="s2">0</span><span class="s0">;</span>
+
+    <span class="s3">//function sequence</span>
+    <span class="s3">//initialize--&gt;formulate players and opponents--&gt;</span>
+    <span class="s1">@FXML</span>
+    <span class="s3">//this is the initialize or start function, it gets the class and object set up and starts the game for the user</span>
+    <span class="s0">public void </span><span class="s1">initialize() {</span>
+        <span class="s3">//creates the player and opponent classes</span>
+        <span class="s1">formulatePlayers()</span><span class="s0">;</span>
+        <span class="s1">formulateOpponents()</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">sum = </span><span class="s2">0</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">min = opponents.get(</span><span class="s2">0</span><span class="s1">).getThreePointPercentage()</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">max = opponents.get(</span><span class="s2">0</span><span class="s1">).getThreePointPercentage()</span><span class="s0">;</span>
+        <span class="s0">for</span><span class="s1">(Opponents o: opponents){</span>
+            <span class="s0">if</span><span class="s1">(o.getThreePointPercentage()&lt;min){</span>
+                <span class="s1">min = o.getThreePointPercentage()</span><span class="s0">;</span>
+            <span class="s1">}</span>
+            <span class="s0">if</span><span class="s1">(o.getThreePointPercentage()&gt;max){</span>
+                <span class="s1">max = o.getThreePointPercentage()</span><span class="s0">;</span>
+            <span class="s1">}</span>
+            <span class="s1">sum+=o.getThreePointPercentage()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s1">System.out.println(</span><span class="s4">&quot;Average: &quot; </span><span class="s1">+ sum/opponents.size())</span><span class="s0">;</span>
+        <span class="s1">System.out.println(</span><span class="s4">&quot;Min: &quot; </span><span class="s1">+ min)</span><span class="s0">;</span>
+        <span class="s1">System.out.println(</span><span class="s4">&quot;Max: &quot; </span><span class="s1">+ max)</span><span class="s0">;</span>
+        <span class="s3">//fills the listview with players</span>
+        <span class="s0">for </span><span class="s1">(Player p : players) {</span>
+            <span class="s1">peopleList.getItems().add(p.getName())</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s3">//changing visibility of items</span>
+        <span class="s1">choosePlayerText.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">peopleList.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">notification.setText(</span><span class="s4">&quot;Click on a player to see their attributes&quot;</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s3">//this fills the array of the players or heros that you can get, it has slightly different attributes as the opponents class, many of the attributes are based upon real player data</span>
+    <span class="s0">private void </span><span class="s1">formulatePlayers() {</span>
+        <span class="s1">players.add(</span><span class="s0">new </span><span class="s1">Player(</span><span class="s4">&quot;Stephen Curry&quot;</span><span class="s0">, </span><span class="s4">&quot;Davidson College&quot;</span><span class="s0">, </span><span class="s4">&quot;Point Guard&quot;</span><span class="s0">, </span><span class="s4">&quot;6,3&quot;</span><span class="s0">, </span><span class="s4">&quot;Lights Out 3 PT Shooter&quot;</span><span class="s0">, </span><span class="s4">&quot;Injury Prone&quot;</span><span class="s0">,new double</span><span class="s1">[]{</span><span class="s2">0.687</span><span class="s0">,</span><span class="s2">4</span><span class="s0">,</span><span class="s2">0.598</span><span class="s0">,</span><span class="s2">0.412</span><span class="s0">,</span><span class="s2">5</span><span class="s1">}</span><span class="s0">, </span><span class="s4">&quot;steph.jpg&quot;</span><span class="s0">, </span><span class="s4">&quot;steph2.jpg&quot;</span><span class="s1">))</span><span class="s0">;</span>
+        <span class="s1">players.add(</span><span class="s0">new </span><span class="s1">Player(</span><span class="s4">&quot;Paul George&quot;</span><span class="s0">, </span><span class="s4">&quot;Fresno State&quot;</span><span class="s0">, </span><span class="s4">&quot;Shooting Guard&quot;</span><span class="s0">, </span><span class="s4">&quot;6,8&quot;</span><span class="s0">, </span><span class="s4">&quot;Good scorer and defensive presence&quot;</span><span class="s0">, </span><span class="s4">&quot;Dunking and Defense&quot;</span><span class="s0">,new double</span><span class="s1">[]{</span><span class="s2">0.603</span><span class="s0">,</span><span class="s2">4</span><span class="s0">,</span><span class="s2">0.467</span><span class="s0">,</span><span class="s2">0.381</span><span class="s0">,</span><span class="s2">3</span><span class="s1">}</span><span class="s0">, </span><span class="s4">&quot;paul.jpg&quot;</span><span class="s0">,</span><span class="s4">&quot;paul2.jpg&quot;</span><span class="s1">))</span><span class="s0">;</span>
+        <span class="s1">players.add(</span><span class="s0">new </span><span class="s1">Player(</span><span class="s4">&quot;Jayson Tatum&quot;</span><span class="s0">, </span><span class="s4">&quot;Duke&quot;</span><span class="s0">, </span><span class="s4">&quot;Small Forward&quot;</span><span class="s0">, </span><span class="s4">&quot;6,8&quot;</span><span class="s0">, </span><span class="s4">&quot;Great scorer&quot;</span><span class="s0">, </span><span class="s4">&quot;Layups&quot;</span><span class="s0">,new double</span><span class="s1">[]{</span><span class="s2">0.333</span><span class="s0">,</span><span class="s2">6</span><span class="s0">,</span><span class="s2">0.469</span><span class="s0">,</span><span class="s2">0.401</span><span class="s0">,</span><span class="s2">2</span><span class="s1">}</span><span class="s0">, </span><span class="s4">&quot;jayson.jpg&quot;</span><span class="s0">, </span><span class="s4">&quot;jayson2.jpg&quot;</span><span class="s1">))</span><span class="s0">;</span>
+        <span class="s1">players.add(</span><span class="s0">new </span><span class="s1">Player(</span><span class="s4">&quot;Draymond Green&quot;</span><span class="s0">, </span><span class="s4">&quot;Michigan State University&quot;</span><span class="s0">, </span><span class="s4">&quot;Power Forward&quot;</span><span class="s0">, </span><span class="s4">&quot;6,6&quot;</span><span class="s0">, </span><span class="s4">&quot;Dunking and Defense&quot;</span><span class="s0">, </span><span class="s4">&quot;Poor 3 pt shooter&quot;</span><span class="s0">,new double</span><span class="s1">[]{</span><span class="s2">0.591</span><span class="s0">,</span><span class="s2">7</span><span class="s0">,</span><span class="s2">0.40</span><span class="s0">,</span><span class="s2">0.412</span><span class="s0">,</span><span class="s2">0.319</span><span class="s0">,</span><span class="s2">3</span><span class="s1">}</span><span class="s0">, </span><span class="s4">&quot;draymond.jpg&quot;</span><span class="s0">,</span><span class="s4">&quot;draymond2.jpg&quot;</span><span class="s1">))</span><span class="s0">;</span>
+        <span class="s1">players.add(</span><span class="s0">new </span><span class="s1">Player(</span><span class="s4">&quot;Joel Embiid&quot;</span><span class="s0">, </span><span class="s4">&quot;University of Kansas&quot;</span><span class="s0">, </span><span class="s4">&quot;Center&quot;</span><span class="s0">, </span><span class="s4">&quot;7,0&quot;</span><span class="s0">, </span><span class="s4">&quot;Can score from anywhere&quot;</span><span class="s0">, </span><span class="s4">&quot;Injury Prone&quot;</span><span class="s0">,new double</span><span class="s1">[]{</span><span class="s2">0.664</span><span class="s0">,</span><span class="s2">7</span><span class="s0">,</span><span class="s2">0.45</span><span class="s0">,</span><span class="s2">0.319</span><span class="s0">,</span><span class="s2">5</span><span class="s1">}</span><span class="s0">, </span><span class="s4">&quot;joel.jpg&quot;</span><span class="s0">,</span><span class="s4">&quot;joel2.jpg&quot;</span><span class="s1">))</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s3">//this fills the array of all of the opponents, most of the attributes are based upon real player data</span>
+    <span class="s0">private void </span><span class="s1">formulateOpponents() {</span>
+
+        <span class="s1">opponents.add(</span><span class="s0">new </span><span class="s1">Opponents(</span><span class="s4">&quot;Michael Jordan&quot;</span><span class="s0">, </span><span class="s4">&quot;North Carolina&quot;</span><span class="s0">, </span><span class="s4">&quot;Shooting Guard&quot;</span><span class="s0">, </span><span class="s4">&quot;6,6&quot;</span><span class="s0">, </span><span class="s4">&quot;Tenacious scorer, Greatest of All Time&quot;</span><span class="s0">, </span><span class="s4">&quot;None&quot;</span><span class="s0">, </span><span class="s4">&quot;mj.jpg&quot;</span><span class="s0">, </span><span class="s2">99</span><span class="s0">, </span><span class="s2">0.5</span><span class="s0">, </span><span class="s2">.75</span><span class="s0">, </span><span class="s2">0.50</span><span class="s0">, </span><span class="s2">8</span><span class="s1">))</span><span class="s0">;</span>
+        <span class="s1">opponents.add(</span><span class="s0">new </span><span class="s1">Opponents(</span><span class="s4">&quot;LeBron James&quot;</span><span class="s0">, </span><span class="s4">&quot;St. Vincent-St.Mary High School&quot;</span><span class="s0">, </span><span class="s4">&quot;Small Forward&quot;</span><span class="s0">, </span><span class="s4">&quot;6,9&quot;</span><span class="s0">, </span><span class="s4">&quot;All around talented, unstoppable in the post&quot;</span><span class="s0">, </span><span class="s4">&quot;None&quot;</span><span class="s0">, </span><span class="s4">&quot;lebron.jpg&quot;</span><span class="s0">, </span><span class="s2">98</span><span class="s0">, </span><span class="s2">0.344</span><span class="s0">, </span><span class="s2">0.70</span><span class="s0">, </span><span class="s2">0.488</span><span class="s0">, </span><span class="s2">10</span><span class="s1">))</span><span class="s0">;</span>
+        <span class="s1">opponents.add(</span><span class="s0">new </span><span class="s1">Opponents(</span><span class="s4">&quot;Kevin Durant&quot;</span><span class="s0">, </span><span class="s4">&quot;The University of Texas at Austin&quot;</span><span class="s0">, </span><span class="s4">&quot;Power Forward&quot;</span><span class="s0">, </span><span class="s4">&quot;6,10&quot;</span><span class="s0">, </span><span class="s4">&quot;Incredible All-Around Scorer&quot;</span><span class="s0">, </span><span class="s4">&quot;None&quot;</span><span class="s0">, </span><span class="s4">&quot;kd.jpg&quot;</span><span class="s0">, </span><span class="s2">97</span><span class="s0">, </span><span class="s2">0.381</span><span class="s0">, </span><span class="s2">0.65</span><span class="s0">, </span><span class="s2">0.40</span><span class="s0">, </span><span class="s2">6</span><span class="s1">))</span><span class="s0">;</span>
+
+        <span class="s1">opponents.add(</span><span class="s0">new </span><span class="s1">Opponents(</span><span class="s4">&quot;Kawhi Leonard&quot;</span><span class="s0">, </span><span class="s4">&quot;San Diego State&quot;</span><span class="s0">, </span><span class="s4">&quot;Small Forward&quot;</span><span class="s0">, </span><span class="s4">&quot;6,7&quot;</span><span class="s0">, </span><span class="s4">&quot;Good scorer, better defender&quot;</span><span class="s0">, </span><span class="s4">&quot;Not a great shooter&quot;</span><span class="s0">, </span><span class="s4">&quot;kawhi.jpg&quot;</span><span class="s0">, </span><span class="s2">95</span><span class="s0">, </span><span class="s2">0.383</span><span class="s0">, </span><span class="s2">0.66</span><span class="s0">, </span><span class="s2">0.48</span><span class="s0">, </span><span class="s2">7</span><span class="s1">))</span><span class="s0">;</span>
+        <span class="s1">opponents.add(</span><span class="s0">new </span><span class="s1">Opponents(</span><span class="s4">&quot;Klay Thompson&quot;</span><span class="s0">, </span><span class="s4">&quot;Washington State University&quot;</span><span class="s0">, </span><span class="s4">&quot;Shooting Guard&quot;</span><span class="s0">, </span><span class="s4">&quot;6,6&quot;</span><span class="s0">, </span><span class="s4">&quot;Amazing 3 point shooter, good defense&quot;</span><span class="s0">, </span><span class="s4">&quot;Not very athletic&quot;</span><span class="s0">, </span><span class="s4">&quot;klay.jpg&quot;</span><span class="s0">, </span><span class="s2">93</span><span class="s0">, </span><span class="s2">0.419</span><span class="s0">, </span><span class="s2">0.6</span><span class="s0">, </span><span class="s2">0.45</span><span class="s0">, </span><span class="s2">6</span><span class="s1">))</span><span class="s0">;</span>
+        <span class="s1">opponents.add(</span><span class="s0">new </span><span class="s1">Opponents(</span><span class="s4">&quot;Damian Lillard&quot;</span><span class="s0">, </span><span class="s4">&quot;Weber State&quot;</span><span class="s0">, </span><span class="s4">&quot;Point Guard&quot;</span><span class="s0">, </span><span class="s4">&quot;6,2&quot;</span><span class="s0">, </span><span class="s4">&quot;Tenacious Scorer&quot;</span><span class="s0">, </span><span class="s4">&quot;Small&quot;</span><span class="s0">, </span><span class="s4">&quot;dame.jpg&quot;</span><span class="s0">, </span><span class="s2">91</span><span class="s0">, </span><span class="s2">0.373</span><span class="s0">, </span><span class="s2">0.6</span><span class="s0">, </span><span class="s2">0.4</span><span class="s0">, </span><span class="s2">5</span><span class="s1">))</span><span class="s0">;</span>
+
+        <span class="s1">opponents.add(</span><span class="s0">new </span><span class="s1">Opponents(</span><span class="s4">&quot;James Harden&quot;</span><span class="s0">, </span><span class="s4">&quot;Arizona State University&quot;</span><span class="s0">, </span><span class="s4">&quot;Shooting Guard&quot;</span><span class="s0">, </span><span class="s4">&quot;6,5&quot;</span><span class="s0">, </span><span class="s4">&quot;All-Around Scorer&quot;</span><span class="s0">, </span><span class="s4">&quot;Relies on 3 pointers&quot;</span><span class="s0">, </span><span class="s4">&quot;harden.jpg&quot;</span><span class="s0">, </span><span class="s2">89</span><span class="s0">, </span><span class="s2">0.363</span><span class="s0">, </span><span class="s2">0.6</span><span class="s0">, </span><span class="s2">0.38</span><span class="s0">, </span><span class="s2">6</span><span class="s1">))</span><span class="s0">;</span>
+        <span class="s1">opponents.add(</span><span class="s0">new </span><span class="s1">Opponents(</span><span class="s4">&quot;Zion Williamson&quot;</span><span class="s0">, </span><span class="s4">&quot;Duke University&quot;</span><span class="s0">, </span><span class="s4">&quot;Power Forward&quot;</span><span class="s0">, </span><span class="s4">&quot;6,6&quot;</span><span class="s0">, </span><span class="s4">&quot;Complete Physical Beast&quot;</span><span class="s0">, </span><span class="s4">&quot;Shooting&quot;</span><span class="s0">, </span><span class="s4">&quot;zion.jpg&quot;</span><span class="s0">, </span><span class="s2">88</span><span class="s0">, </span><span class="s2">0.429</span><span class="s0">, </span><span class="s2">0.59</span><span class="s0">, </span><span class="s2">0.3</span><span class="s0">, </span><span class="s2">10</span><span class="s1">))</span><span class="s0">;</span>
+        <span class="s1">opponents.add(</span><span class="s0">new </span><span class="s1">Opponents(</span><span class="s4">&quot;Jimmy Butler&quot;</span><span class="s0">, </span><span class="s4">&quot;Marquette University&quot;</span><span class="s0">, </span><span class="s4">&quot;Small Forward&quot;</span><span class="s0">, </span><span class="s4">&quot;6,7&quot;</span><span class="s0">, </span><span class="s4">&quot;Smart Playmaker&quot;</span><span class="s0">, </span><span class="s4">&quot;Not a great scorer&quot;</span><span class="s0">, </span><span class="s4">&quot;jimmy.jpg&quot;</span><span class="s0">, </span><span class="s2">86</span><span class="s0">, </span><span class="s2">0.333</span><span class="s0">, </span><span class="s2">0.6</span><span class="s0">, </span><span class="s2">0.33</span><span class="s0">, </span><span class="s2">6</span><span class="s1">))</span><span class="s0">;</span>
+
+        <span class="s1">opponents.add(</span><span class="s0">new </span><span class="s1">Opponents(</span><span class="s4">&quot;Kyrie Irving&quot;</span><span class="s0">, </span><span class="s4">&quot;Duke University&quot;</span><span class="s0">, </span><span class="s4">&quot;Point Guard&quot;</span><span class="s0">, </span><span class="s4">&quot;6,2&quot;</span><span class="s0">, </span><span class="s4">&quot;Crafty Scorer&quot;</span><span class="s0">, </span><span class="s4">&quot;Small&quot;</span><span class="s0">, </span><span class="s4">&quot;kyrie.jpg&quot;</span><span class="s0">, </span><span class="s2">85</span><span class="s0">, </span><span class="s2">0.390</span><span class="s0">, </span><span class="s2">0.7</span><span class="s0">, </span><span class="s2">0.3</span><span class="s0">, </span><span class="s2">4</span><span class="s1">))</span><span class="s0">;</span>
+        <span class="s1">opponents.add(</span><span class="s0">new </span><span class="s1">Opponents(</span><span class="s4">&quot;Nikola Jokic&quot;</span><span class="s0">, </span><span class="s4">&quot;The University of Detroit Mercy&quot;</span><span class="s0">, </span><span class="s4">&quot;Center&quot;</span><span class="s0">, </span><span class="s4">&quot;7,0&quot;</span><span class="s0">, </span><span class="s4">&quot;Great Playmaker&quot;</span><span class="s0">, </span><span class="s4">&quot;Slow&quot;</span><span class="s0">, </span><span class="s4">&quot;nikola.jpg&quot;</span><span class="s0">, </span><span class="s2">83</span><span class="s0">, </span><span class="s2">0.338</span><span class="s0">, </span><span class="s2">0.55</span><span class="s0">, </span><span class="s2">0.25</span><span class="s0">, </span><span class="s2">8</span><span class="s1">))</span><span class="s0">;</span>
+        <span class="s1">opponents.add(</span><span class="s0">new </span><span class="s1">Opponents(</span><span class="s4">&quot;Jamal Murray&quot;</span><span class="s0">, </span><span class="s4">&quot;The University of Kentucky&quot;</span><span class="s0">, </span><span class="s4">&quot;Point Guard&quot;</span><span class="s0">, </span><span class="s4">&quot;6,4&quot;</span><span class="s0">, </span><span class="s4">&quot;Great Scorer&quot;</span><span class="s0">, </span><span class="s4">&quot;Not very consistent&quot;</span><span class="s0">, </span><span class="s4">&quot;murray.jpg&quot;</span><span class="s0">, </span><span class="s2">81</span><span class="s0">, </span><span class="s2">0.358</span><span class="s0">, </span><span class="s2">0.54</span><span class="s0">, </span><span class="s2">0.3</span><span class="s0">, </span><span class="s2">4</span><span class="s1">))</span><span class="s0">;</span>
+
+        <span class="s1">opponents.add(</span><span class="s0">new </span><span class="s1">Opponents(</span><span class="s4">&quot;Zach Lavine&quot;</span><span class="s0">, </span><span class="s4">&quot;The University of California&quot;</span><span class="s0">, </span><span class="s4">&quot;Small Forward&quot;</span><span class="s0">, </span><span class="s4">&quot;6,6&quot;</span><span class="s0">, </span><span class="s4">&quot;Great athleticism, scoring ability&quot;</span><span class="s0">, </span><span class="s4">&quot;Layups&quot;</span><span class="s0">, </span><span class="s4">&quot;lavine.jpg&quot;</span><span class="s0">, </span><span class="s2">78</span><span class="s0">, </span><span class="s2">0.375</span><span class="s0">, </span><span class="s2">0.55</span><span class="s0">, </span><span class="s2">0.3</span><span class="s0">, </span><span class="s2">5</span><span class="s1">))</span><span class="s0">;</span>
+        <span class="s1">opponents.add(</span><span class="s0">new </span><span class="s1">Opponents(</span><span class="s4">&quot;Ja Morant&quot;</span><span class="s0">, </span><span class="s4">&quot;Murray State&quot;</span><span class="s0">, </span><span class="s4">&quot;Point Guard&quot;</span><span class="s0">, </span><span class="s4">&quot;6,3&quot;</span><span class="s0">, </span><span class="s4">&quot;Great at attacking the rim&quot;</span><span class="s0">, </span><span class="s4">&quot;Shooting&quot;</span><span class="s0">, </span><span class="s4">&quot;ja.jpg&quot;</span><span class="s0">, </span><span class="s2">76</span><span class="s0">, </span><span class="s2">0.335</span><span class="s0">, </span><span class="s2">0.55</span><span class="s0">, </span><span class="s2">0.25</span><span class="s0">, </span><span class="s2">4</span><span class="s1">))</span><span class="s0">;</span>
+        <span class="s1">opponents.add(</span><span class="s0">new </span><span class="s1">Opponents(</span><span class="s4">&quot;Pascal Siakam&quot;</span><span class="s0">, </span><span class="s4">&quot;New Mexico State University&quot;</span><span class="s0">, </span><span class="s4">&quot;Power Forward&quot;</span><span class="s0">, </span><span class="s4">&quot;6,9&quot;</span><span class="s0">, </span><span class="s4">&quot;Great scorer and playmaker&quot;</span><span class="s0">, </span><span class="s4">&quot;Finishing&quot;</span><span class="s0">, </span><span class="s4">&quot;pascal.jpg&quot;</span><span class="s0">, </span><span class="s2">75</span><span class="s0">, </span><span class="s2">0.334</span><span class="s0">, </span><span class="s2">0.5</span><span class="s0">, </span><span class="s2">0.20</span><span class="s0">, </span><span class="s2">4</span><span class="s1">))</span><span class="s0">;</span>
+
+    <span class="s1">}</span>
+
+    <span class="s1">@FXML</span>
+    <span class="s3">//this shows up when you click a player, the if statement just shows whether you are choosing a hero or opponent</span>
+    <span class="s0">private void </span><span class="s1">viewPlayerAttributes() {</span>
+        <span class="s0">if </span><span class="s1">(choosePlayerText.getText().equals(</span><span class="s4">&quot;Choose Your Player&quot;</span><span class="s1">)) {</span>
+            <span class="s1">heroAttributes()</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s1">oppAttributes()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+    <span class="s3">//this displays all of the attributes of a hero that is shown when the user clicks their name in a listview</span>
+    <span class="s0">private void </span><span class="s1">heroAttributes() {</span>
+        <span class="s1">notification.setText(</span><span class="s4">&quot;Press choose player to make that player your avatar&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">String selected = peopleList.getSelectionModel().getSelectedItem().toString()</span><span class="s0">;</span>
+        <span class="s0">int </span><span class="s1">player_index = </span><span class="s2">0</span><span class="s0">;</span>
+        <span class="s3">//identifies which player was clicked on by the user so that their attributes can be displayed</span>
+        <span class="s0">for </span><span class="s1">(Player i : players) {</span>
+            <span class="s0">if </span><span class="s1">(selected.equals(i.getName())) {</span>
+                <span class="s1">player_index = players.indexOf(i)</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+
+        <span class="s3">//makes it so that everything that displays attributes are visible</span>
+        <span class="s1">playerImage.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">name_label.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">school_label.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">position_label.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">height_label.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">skills_label.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">weakness_label.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">choosePlayerButton.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s3">//displays the attributes of the player</span>
+        <span class="s1">name_label.setText(</span><span class="s4">&quot;Name: &quot; </span><span class="s1">+ players.get(player_index).getName())</span><span class="s0">;</span>
+        <span class="s1">school_label.setText(</span><span class="s4">&quot;School: &quot; </span><span class="s1">+ players.get(player_index).getSchool())</span><span class="s0">;</span>
+        <span class="s1">position_label.setText(</span><span class="s4">&quot;Position: &quot; </span><span class="s1">+ players.get(player_index).getPosition())</span><span class="s0">;</span>
+        <span class="s1">height_label.setText(</span><span class="s4">&quot;Height: &quot; </span><span class="s1">+ players.get(player_index).getHeight())</span><span class="s0">;</span>
+        <span class="s1">skills_label.setText(</span><span class="s4">&quot;Skills: &quot; </span><span class="s1">+ players.get(player_index).getBestSkill())</span><span class="s0">;</span>
+        <span class="s1">weakness_label.setText(</span><span class="s4">&quot;Weakness: &quot; </span><span class="s1">+ players.get(player_index).getWeakness())</span><span class="s0">;</span>
+
+        <span class="s1">Image image = </span><span class="s0">new </span><span class="s1">Image(players.get(player_index).getPath())</span><span class="s0">;</span>
+        <span class="s1">playerImage.setImage(image)</span><span class="s0">;</span>
+
+    <span class="s1">}</span>
+    <span class="s3">//this displays the information for an opponent when someone clicks their name in the listview</span>
+    <span class="s0">private void </span><span class="s1">oppAttributes() {</span>
+        <span class="s1">notification.setText(</span><span class="s4">&quot;Press choose player to fight that player&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">String selected = peopleList.getSelectionModel().getSelectedItem().toString()</span><span class="s0">;</span>
+        <span class="s0">int </span><span class="s1">opponent_index = </span><span class="s2">0</span><span class="s0">;</span>
+        <span class="s3">//identifies which player was clicked on by the user so that their attributes can be displayed</span>
+        <span class="s0">for </span><span class="s1">(Opponents i : opponents) {</span>
+            <span class="s0">if </span><span class="s1">(selected.equals(i.getName())) {</span>
+                <span class="s1">opponent_index = opponents.indexOf(i)</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+        <span class="s1">name_label.setText(</span><span class="s4">&quot;Name: &quot; </span><span class="s1">+ opponents.get(opponent_index).getName())</span><span class="s0">;</span>
+        <span class="s1">school_label.setText(</span><span class="s4">&quot;School: &quot; </span><span class="s1">+ opponents.get(opponent_index).getSchool())</span><span class="s0">;</span>
+        <span class="s1">position_label.setText(</span><span class="s4">&quot;Position: &quot; </span><span class="s1">+ opponents.get(opponent_index).getPosition())</span><span class="s0">;</span>
+        <span class="s1">height_label.setText(</span><span class="s4">&quot;Height: &quot; </span><span class="s1">+ opponents.get(opponent_index).getHeight())</span><span class="s0">;</span>
+        <span class="s1">skills_label.setText(</span><span class="s4">&quot;Skills: &quot; </span><span class="s1">+ opponents.get(opponent_index).getBestSkill())</span><span class="s0">;</span>
+        <span class="s1">weakness_label.setText(</span><span class="s4">&quot;Weakness: &quot; </span><span class="s1">+ opponents.get(opponent_index).getWeakness())</span><span class="s0">;</span>
+
+        <span class="s1">Image image = </span><span class="s0">new </span><span class="s1">Image(opponents.get(opponent_index).getPath())</span><span class="s0">;</span>
+        <span class="s1">playerImage.setImage(image)</span><span class="s0">;</span>
+
+        <span class="s1">playerImage.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">name_label.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">school_label.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">position_label.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">height_label.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">skills_label.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">weakness_label.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">choosePlayerButton.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@FXML</span>
+    <span class="s3">//this just decides what to do when someone clicks to select either a hero or opponent</span>
+    <span class="s0">private void </span><span class="s1">chooseCharacter() {</span>
+        <span class="s0">if </span><span class="s1">(choosePlayerText.getText().equals(</span><span class="s4">&quot;Choose Your Player&quot;</span><span class="s1">)) {</span>
+            <span class="s1">choosePlayer()</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s1">chooseOpponent()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+    <span class="s3">//identifies a player and makes that player the user's hero</span>
+    <span class="s0">private void </span><span class="s1">choosePlayer() {</span>
+        <span class="s3">//identifies the player in the array</span>
+        <span class="s0">int </span><span class="s1">player_index = </span><span class="s2">0</span><span class="s0">;</span>
+        <span class="s0">for </span><span class="s1">(Player i : players) {</span>
+            <span class="s0">if </span><span class="s1">(name_label.getText().substring(name_label.getText().indexOf(</span><span class="s4">&quot; &quot;</span><span class="s1">) + </span><span class="s2">1</span><span class="s1">).equals(i.getName())) {</span>
+                <span class="s1">player_index = players.indexOf(i)</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+        <span class="s1">hero = players.get(player_index)</span><span class="s0">;</span>
+        <span class="s3">//displays the player name and hides everything that is unnecessary</span>
+        <span class="s1">notification.setText(</span><span class="s4">&quot;Congratulations your player is &quot; </span><span class="s1">+ hero.getName() + </span><span class="s4">&quot;!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">choosePlayerText.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">peopleList.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">playerImage.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">name_label.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">school_label.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">position_label.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">height_label.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">skills_label.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">weakness_label.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">choosePlayerButton.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">setupOpponent()</span><span class="s0">;</span>
+
+    <span class="s1">}</span>
+    <span class="s3">//this code selects an opponent and makes that opponent the opponent of the hero</span>
+    <span class="s0">private void </span><span class="s1">chooseOpponent() {</span>
+        <span class="s0">int </span><span class="s1">opponent_index = </span><span class="s2">0</span><span class="s0">;</span>
+        <span class="s0">for </span><span class="s1">(Opponents i : opponents) {</span>
+            <span class="s0">if </span><span class="s1">(name_label.getText().substring(name_label.getText().indexOf(</span><span class="s4">&quot; &quot;</span><span class="s1">) + </span><span class="s2">1</span><span class="s1">).equals(i.getName())) {</span>
+                <span class="s1">opponent_index = opponents.indexOf(i)</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+        <span class="s1">opp = opponents.get(opponent_index)</span><span class="s0">;</span>
+
+        <span class="s1">notification.setText(</span><span class="s4">&quot;You will be versing &quot; </span><span class="s1">+ opp.getName() + </span><span class="s4">&quot;!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">choosePlayerText.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">peopleList.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">playerImage.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">name_label.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">school_label.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">position_label.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">height_label.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">skills_label.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">weakness_label.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">choosePlayerButton.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">setUpBattle()</span><span class="s0">;</span>
+
+    <span class="s1">}</span>
+    <span class="s3">//this sets up the screen for the user to pick their opponent</span>
+    <span class="s0">private void </span><span class="s1">setupOpponent() {</span>
+        <span class="s1">notification.setText(</span><span class="s4">&quot;Your opponents are based on your skill level and experience&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">choosePlayerText.setText(</span><span class="s4">&quot;Choose Your Opponent&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">choosePlayerText.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">peopleList.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">peopleList.getItems().clear()</span><span class="s0">;</span>
+        <span class="s0">for </span><span class="s1">(Opponents o : opponents) {</span>
+            <span class="s0">if </span><span class="s1">(o.getRating() &lt;= hero.getRating() + </span><span class="s2">5</span><span class="s1">) {</span>
+                <span class="s1">peopleList.getItems().add(o.getName())</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+    <span class="s3">//once the hero and opponent are selected, then this simply sets up the battle screen</span>
+    <span class="s0">private void </span><span class="s1">setUpBattle() {</span>
+        <span class="s1">heroScore = </span><span class="s2">0</span><span class="s0">;</span>
+        <span class="s1">oppScore = </span><span class="s2">0</span><span class="s0">;</span>
+        <span class="s1">hero_score.setText(</span><span class="s4">&quot;&quot;</span><span class="s1">+heroScore)</span><span class="s0">;</span>
+        <span class="s1">opp_score.setText(</span><span class="s4">&quot;&quot;</span><span class="s1">+oppScore)</span><span class="s0">;</span>
+        <span class="s1">notification.setText(</span><span class="s4">&quot;Battle your opponent, first to 21 points wins&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">versus.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">p1battle.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">Image heroImage = </span><span class="s0">new </span><span class="s1">Image(hero.getPath())</span><span class="s0">;</span>
+        <span class="s1">p1battle.setImage(heroImage)</span><span class="s0">;</span>
+        <span class="s1">p2battle.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">Image oppImage = </span><span class="s0">new </span><span class="s1">Image(opp.getPath())</span><span class="s0">;</span>
+        <span class="s1">p2battle.setImage(oppImage)</span><span class="s0">;</span>
+
+        <span class="s1">p1name.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">p2name.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">p1name.setText(hero.getName())</span><span class="s0">;</span>
+        <span class="s1">p2name.setText(opp.getName())</span><span class="s0">;</span>
+
+        <span class="s1">score_text.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">divider.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">hero_score.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">opp_score.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">layup.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">dunk.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">midrange.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">threePoint.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">layup.setDisable(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">dunk.setDisable(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">midrange.setDisable(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">threePoint.setDisable(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">opp_offense.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">opp_offense.setDisable(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s3">//make a button to run the opponent's offense</span>
+    <span class="s0">private void </span><span class="s1">checkBattleComplete() {</span>
+        <span class="s3">//if the hero wins</span>
+        <span class="s0">if </span><span class="s1">(heroScore &gt;= </span><span class="s2">11</span><span class="s1">) {</span>
+            <span class="s3">//reset the scores</span>
+            <span class="s1">heroScore = </span><span class="s2">0</span><span class="s0">;</span>
+            <span class="s1">oppScore = </span><span class="s2">0</span><span class="s0">;</span>
+            <span class="s0">if</span><span class="s1">(hero.getRating()&lt;opp.getRating()){</span>
+                <span class="s3">//makes the skill upgrade option available and clears the list view</span>
+                <span class="s1">skill_upgrade.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">skill_upgrade.setDisable(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">skill_upgrade.getItems().clear()</span><span class="s0">;</span>
+                <span class="s3">//checks if there are any skills that the opponent has better than the player</span>
+                <span class="s0">boolean </span><span class="s1">anySkills = </span><span class="s0">false;</span>
+                <span class="s0">if</span><span class="s1">(hero.getLayupPerc()&lt;opp.getLayupPerc()){</span>
+                    <span class="s1">skill_upgrade.getItems().add(</span><span class="s4">&quot;Layup&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                    <span class="s1">anySkills = </span><span class="s0">true;</span>
+                <span class="s1">}</span>
+                <span class="s0">if</span><span class="s1">(hero.getPower()&lt;opp.getPower()){</span>
+                    <span class="s1">skill_upgrade.getItems().add(</span><span class="s4">&quot;Dunk&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                    <span class="s1">anySkills = </span><span class="s0">true;</span>
+                <span class="s1">}</span>
+                <span class="s0">if</span><span class="s1">(hero.getMidrangePerc()&lt;opp.getMidrange()){</span>
+                    <span class="s1">skill_upgrade.getItems().add(</span><span class="s4">&quot;Midrange&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                    <span class="s1">anySkills = </span><span class="s0">true;</span>
+                <span class="s1">}</span>
+                <span class="s0">if</span><span class="s1">(hero.getThreePointPercentage()&lt;opp.getThreePointPercentage()){</span>
+                    <span class="s1">skill_upgrade.getItems().add(</span><span class="s4">&quot;Three Pointer&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                    <span class="s1">anySkills = </span><span class="s0">true;</span>
+                <span class="s1">}</span>
+                <span class="s0">if</span><span class="s1">(!anySkills){</span>
+                    <span class="s1">skill_upgrade.getItems().add(</span><span class="s4">&quot;Upgrade rating&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+            <span class="s3">//changes the jersey of the hero if needed</span>
+            <span class="s0">if</span><span class="s1">(!hero.getPath().equals(hero.getPath2())){</span>
+                <span class="s1">hero.setPath(hero.getPath2())</span><span class="s0">;</span>
+                <span class="s1">notification.setText(</span><span class="s4">&quot;You got a new jersey!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">Image heroImage = </span><span class="s0">new </span><span class="s1">Image(hero.getPath())</span><span class="s0">;</span>
+                <span class="s1">p1battle.setImage(heroImage)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+            <span class="s1">show_winner.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">next_battle.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">notification.setText(hero.getName() + </span><span class="s4">&quot; has won the battle! Inherit one of &quot; </span><span class="s1">+ opp.getName() + </span><span class="s4">&quot;'s skills that are better. If there are no skills than your player has better skills.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">breakDownBattle(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">hero.addToDefeatedOpponents(opp)</span><span class="s0">;</span>
+            <span class="s1">showHeroStats()</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else if </span><span class="s1">(oppScore &gt;= </span><span class="s2">11</span><span class="s1">) {</span>
+            <span class="s1">heroScore = </span><span class="s2">0</span><span class="s0">;</span>
+            <span class="s1">oppScore = </span><span class="s2">0</span><span class="s0">;</span>
+            <span class="s3">//code that opponent wins</span>
+            <span class="s1">show_winner.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">next_battle.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">notification.setText(</span><span class="s4">&quot;Better luck next time, &quot; </span><span class="s1">+ hero.getName() + </span><span class="s4">&quot; has lost to &quot; </span><span class="s1">+ opp.getName())</span><span class="s0">;</span>
+            <span class="s1">breakDownBattle(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">hero.addToOpponentsLostTo(opp)</span><span class="s0">;</span>
+            <span class="s1">possibleInjury()</span><span class="s0">;</span>
+            <span class="s1">showHeroStats()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+    <span class="s0">private void </span><span class="s1">possibleInjury(){</span>
+        <span class="s0">double </span><span class="s1">chance = (hero.getInjuryChance()+(opp.getRating() - hero.getRating()))</span><span class="s0">;</span>
+        <span class="s0">int </span><span class="s1">random  = (</span><span class="s0">int</span><span class="s1">)Math.random()*(</span><span class="s2">10</span><span class="s1">) + </span><span class="s2">1</span><span class="s0">;</span>
+        <span class="s0">if</span><span class="s1">(random &lt;= chance &amp;&amp; hero.getRating()&gt;</span><span class="s2">75</span><span class="s1">){</span>
+            <span class="s3">//the hero is injured</span>
+            <span class="s1">notification.setText(</span><span class="s4">&quot;Yikes, you lost the game and got injured, your rating took a hit.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">hero.setRating(hero.getRating()-</span><span class="s2">5</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@FXML</span>
+    <span class="s0">private void </span><span class="s1">upgradeHero() {</span>
+        <span class="s3">//this code identifies the thing that is being upgraded</span>
+        <span class="s1">String skill = skill_upgrade.getSelectionModel().getSelectedItem().toString()</span><span class="s0">;</span>
+        <span class="s3">//the difference in skill levels</span>
+        <span class="s0">if</span><span class="s1">(skill.equals(</span><span class="s4">&quot;Upgrade rating&quot;</span><span class="s1">)){</span>
+            <span class="s1">skill_upgrade.setDisable(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">hero.setRating(hero.getRating() + </span><span class="s2">5</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">showHeroStats()</span><span class="s0">;</span>
+            <span class="s1">next_battle.setDisable(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s0">if </span><span class="s1">(skill.equals(</span><span class="s4">&quot;Layup&quot;</span><span class="s1">)) {</span>
+            <span class="s1">hero.setLayupPerc(hero.getLayupPerc() + </span><span class="s2">0.05</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">skill_upgrade.setDisable(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">hero.setRating(hero.getRating() + </span><span class="s2">5</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">showHeroStats()</span><span class="s0">;</span>
+            <span class="s1">next_battle.setDisable(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else if </span><span class="s1">(skill.equals(</span><span class="s4">&quot;Dunk&quot;</span><span class="s1">)) {</span>
+            <span class="s1">hero.setDunk(hero.getPower() + </span><span class="s2">1</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">skill_upgrade.setDisable(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">hero.setRating(hero.getRating() + </span><span class="s2">5</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">showHeroStats()</span><span class="s0">;</span>
+            <span class="s1">next_battle.setDisable(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else if </span><span class="s1">(skill.equals(</span><span class="s4">&quot;Midrange&quot;</span><span class="s1">)) {</span>
+            <span class="s1">hero.setMidrangePerc(hero.getMidrangePerc() + </span><span class="s2">0.05</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">skill_upgrade.setDisable(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">hero.setRating(hero.getRating() + </span><span class="s2">5</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">showHeroStats()</span><span class="s0">;</span>
+            <span class="s1">next_battle.setDisable(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else if </span><span class="s1">(skill.equals(</span><span class="s4">&quot;Three Pointer&quot;</span><span class="s1">)){</span>
+            <span class="s1">hero.setThreePointPercentage(hero.getThreePointPercentage() + </span><span class="s2">0.05</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">skill_upgrade.setDisable(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">hero.setRating(hero.getRating() + </span><span class="s2">5</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">showHeroStats()</span><span class="s0">;</span>
+            <span class="s1">next_battle.setDisable(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s1">notification.setText(notification.getText()+</span><span class="s4">&quot;Congrats! You have been upgraded!!!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private void </span><span class="s1">showHeroStats() {</span>
+        <span class="s1">players_beat.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">players_lost.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">your_stats.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">rating_stats.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">layup_stats.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">power_stats.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">midrange_stats.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">three_point_stats.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s0">if</span><span class="s1">(hero.getDefeatedOpponents().size()&gt;</span><span class="s2">0</span><span class="s1">){</span>
+            <span class="s1">String beat =</span><span class="s4">&quot;&quot;</span><span class="s0">;</span>
+            <span class="s0">for</span><span class="s1">(Opponents o: hero.getDefeatedOpponents()){</span>
+                <span class="s1">beat+= o.getName()+</span><span class="s4">&quot;, &quot;</span><span class="s0">;</span>
+            <span class="s1">}</span>
+            <span class="s1">players_beat.setText(</span><span class="s4">&quot;You have beat: &quot;</span><span class="s1">+ beat.substring(</span><span class="s2">0</span><span class="s0">, </span><span class="s1">beat.length()-</span><span class="s2">2</span><span class="s1">))</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else</span><span class="s1">{</span>
+            <span class="s1">players_beat.setText(</span><span class="s4">&quot;You have beat: Nobody&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s0">if</span><span class="s1">(hero.getOpponentsLostTo().size()&gt;</span><span class="s2">0</span><span class="s1">){</span>
+            <span class="s1">String lost =</span><span class="s4">&quot;&quot;</span><span class="s0">;</span>
+            <span class="s0">for</span><span class="s1">(Opponents o: hero.getOpponentsLostTo()){</span>
+                <span class="s1">lost+= o.getName()+</span><span class="s4">&quot;, &quot;</span><span class="s0">;</span>
+            <span class="s1">}</span>
+            <span class="s1">players_lost.setText(</span><span class="s4">&quot;You have lost to: &quot;</span><span class="s1">+ lost.substring(</span><span class="s2">0</span><span class="s0">, </span><span class="s1">lost.length()-</span><span class="s2">2</span><span class="s1">))</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else</span><span class="s1">{</span>
+            <span class="s1">players_lost.setText(</span><span class="s4">&quot;You have lost to: Nobody&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s1">rating_stats.setText(</span><span class="s4">&quot;Rating: &quot; </span><span class="s1">+ hero.getRating())</span><span class="s0">;</span>
+        <span class="s1">layup_stats.setText(</span><span class="s4">&quot;Layup: &quot; </span><span class="s1">+ hero.getLayupPerc())</span><span class="s0">;</span>
+        <span class="s1">power_stats.setText(</span><span class="s4">&quot;Power/Dunk: &quot; </span><span class="s1">+ hero.getPower())</span><span class="s0">;</span>
+        <span class="s1">midrange_stats.setText(</span><span class="s4">&quot;Midrange: &quot; </span><span class="s1">+ hero.getMidrangePerc())</span><span class="s0">;</span>
+        <span class="s1">three_point_stats.setText(</span><span class="s4">&quot;Three Point: &quot; </span><span class="s1">+ hero.getThreePointPercentage())</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private void </span><span class="s1">breakDownBattle(</span><span class="s0">boolean </span><span class="s1">hero_Won) {</span>
+        <span class="s3">//this is where we will display the results of all of the hero's previous battles</span>
+        <span class="s0">if </span><span class="s1">(hero_Won) {</span>
+            <span class="s1">show_winner.setText(</span><span class="s4">&quot;&gt;&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s1">show_winner.setText(</span><span class="s4">&quot;&lt;&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s1">versus.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+
+
+        <span class="s1">p1name.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">p2name.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">score_text.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">divider.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">hero_score.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">opp_score.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">layup.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">dunk.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">midrange.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">threePoint.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">opp_offense.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">opp_offense.setDisable(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s1">@FXML</span>
+    <span class="s0">private void </span><span class="s1">nextBattle(){</span>
+
+        <span class="s1">next_battle.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s3">//need to make things invisible</span>
+        <span class="s1">players_beat.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">players_lost.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">skill_upgrade.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">p1battle.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">p2battle.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">your_stats.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">rating_stats.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">three_point_stats.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">layup_stats.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">midrange_stats.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">power_stats.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">show_winner.setVisible(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">notification.setText(</span><span class="s4">&quot;Nice, choose your next opponent's level, remember, the goal is to BEAT MICHAEL JORDAN!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s3">//make all the new stuff visible</span>
+        <span class="s1">setupOpponent()</span><span class="s0">;</span>
+
+
+        <span class="s3">//should be able to have another battle</span>
+    <span class="s1">}</span>
+    <span class="s1">@FXML</span>
+    <span class="s0">private void </span><span class="s1">layupShot() {</span>
+        <span class="s0">double </span><span class="s1">heroHeight = Integer.parseInt(hero.getHeight().substring(</span><span class="s2">0</span><span class="s0">, </span><span class="s2">1</span><span class="s1">)) - (Integer.parseInt(hero.getHeight().substring(</span><span class="s2">2</span><span class="s1">)) / </span><span class="s2">12</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">oppHeight = Integer.parseInt(opp.getHeight().substring(</span><span class="s2">0</span><span class="s0">, </span><span class="s2">1</span><span class="s1">)) - (Integer.parseInt(opp.getHeight().substring(</span><span class="s2">2</span><span class="s1">)) / </span><span class="s2">12</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">chance = (hero.getLayupPerc() * ((</span><span class="s0">double</span><span class="s1">) hero.getRating()) / ((</span><span class="s0">double</span><span class="s1">) opp.getRating())) + (heroHeight / </span><span class="s2">7</span><span class="s1">) / </span><span class="s2">10 </span><span class="s1">- (oppHeight / </span><span class="s2">7</span><span class="s1">) / </span><span class="s2">10</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(Math.random() &lt;= chance) {</span>
+            <span class="s3">//code that it goes in</span>
+            <span class="s1">heroScore += </span><span class="s2">2</span><span class="s0">;</span>
+            <span class="s1">notification.setText(hero.getName() + </span><span class="s4">&quot; makes a layup. 2 pts for him!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s3">//code that it missed</span>
+            <span class="s0">if </span><span class="s1">(Math.random() &lt;= </span><span class="s2">0.5</span><span class="s1">) {</span>
+                <span class="s1">notification.setText(</span><span class="s4">&quot;Yikes &quot; </span><span class="s1">+ hero.getName() + </span><span class="s4">&quot; was blocked by &quot; </span><span class="s1">+ opp.getName() + </span><span class="s4">&quot;!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                <span class="s1">notification.setText(</span><span class="s4">&quot;Tough Luck, &quot; </span><span class="s1">+ hero.getName() + </span><span class="s4">&quot; missed the shot.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+        <span class="s1">updateScore()</span><span class="s0">;</span>
+        <span class="s1">switchControls(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">checkBattleComplete()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@FXML</span>
+    <span class="s0">private void </span><span class="s1">dunkShot() {</span>
+        <span class="s0">double </span><span class="s1">heroHeight = Integer.parseInt(hero.getHeight().substring(</span><span class="s2">0</span><span class="s0">, </span><span class="s2">1</span><span class="s1">)) - (Integer.parseInt(hero.getHeight().substring(</span><span class="s2">2</span><span class="s1">)) / </span><span class="s2">12</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">oppHeight = Integer.parseInt(opp.getHeight().substring(</span><span class="s2">0</span><span class="s0">, </span><span class="s2">1</span><span class="s1">)) - (Integer.parseInt(opp.getHeight().substring(</span><span class="s2">2</span><span class="s1">)) / </span><span class="s2">12</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">chance = (((</span><span class="s0">double</span><span class="s1">) hero.getPower() / (</span><span class="s0">double</span><span class="s1">) </span><span class="s2">10</span><span class="s1">) * ((</span><span class="s0">double</span><span class="s1">) hero.getRating()) / ((</span><span class="s0">double</span><span class="s1">) opp.getRating())) + (heroHeight / </span><span class="s2">7</span><span class="s1">) / </span><span class="s2">10 </span><span class="s1">- (oppHeight / </span><span class="s2">7</span><span class="s1">) / </span><span class="s2">10</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(Math.random() &lt;= chance) {</span>
+            <span class="s3">//code that it goes in</span>
+            <span class="s1">heroScore += </span><span class="s2">2</span><span class="s0">;</span>
+            <span class="s1">notification.setText(hero.getName() + </span><span class="s4">&quot; makes a SLAM DUNK!!!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s3">//code that it missed</span>
+            <span class="s0">if </span><span class="s1">(Math.random() &lt;= </span><span class="s2">0.5</span><span class="s1">) {</span>
+                <span class="s1">notification.setText(</span><span class="s4">&quot;Yikes &quot; </span><span class="s1">+ hero.getName() + </span><span class="s4">&quot; was blocked by &quot; </span><span class="s1">+ opp.getName() + </span><span class="s4">&quot;!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                <span class="s1">notification.setText(</span><span class="s4">&quot;Tough Luck, &quot; </span><span class="s1">+ hero.getName() + </span><span class="s4">&quot; somehow missed the rim.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+        <span class="s1">updateScore()</span><span class="s0">;</span>
+        <span class="s1">switchControls(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">checkBattleComplete()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@FXML</span>
+    <span class="s0">private void </span><span class="s1">midrangeShot() {</span>
+        <span class="s0">double </span><span class="s1">heroHeight = Integer.parseInt(hero.getHeight().substring(</span><span class="s2">0</span><span class="s0">, </span><span class="s2">1</span><span class="s1">)) - (Integer.parseInt(hero.getHeight().substring(</span><span class="s2">2</span><span class="s1">)) / </span><span class="s2">12</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">oppHeight = Integer.parseInt(opp.getHeight().substring(</span><span class="s2">0</span><span class="s0">, </span><span class="s2">1</span><span class="s1">)) - (Integer.parseInt(opp.getHeight().substring(</span><span class="s2">2</span><span class="s1">)) / </span><span class="s2">12</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">chance = (hero.getMidrangePerc() * ((</span><span class="s0">double</span><span class="s1">) hero.getRating()) / ((</span><span class="s0">double</span><span class="s1">) opp.getRating())) + (heroHeight / </span><span class="s2">7</span><span class="s1">) / </span><span class="s2">10 </span><span class="s1">- (oppHeight / </span><span class="s2">7</span><span class="s1">) / </span><span class="s2">10</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(Math.random() &lt;= chance) {</span>
+            <span class="s3">//code that it goes in</span>
+            <span class="s1">heroScore += </span><span class="s2">2</span><span class="s0">;</span>
+            <span class="s1">notification.setText(hero.getName() + </span><span class="s4">&quot; drains a midrange shot. 2 pts for him!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s3">//code that it missed</span>
+            <span class="s0">if </span><span class="s1">(Math.random() &lt;= </span><span class="s2">0.5</span><span class="s1">) {</span>
+                <span class="s1">notification.setText(</span><span class="s4">&quot;Yikes &quot; </span><span class="s1">+ hero.getName() + </span><span class="s4">&quot; was blocked by &quot; </span><span class="s1">+ opp.getName() + </span><span class="s4">&quot;!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                <span class="s1">notification.setText(</span><span class="s4">&quot;Tough Luck, &quot; </span><span class="s1">+ hero.getName() + </span><span class="s4">&quot; missed the shot.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+        <span class="s1">updateScore()</span><span class="s0">;</span>
+        <span class="s1">switchControls(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">checkBattleComplete()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@FXML</span>
+    <span class="s0">private void </span><span class="s1">threePointShot() {</span>
+        <span class="s0">double </span><span class="s1">heroHeight = Integer.parseInt(hero.getHeight().substring(</span><span class="s2">0</span><span class="s0">, </span><span class="s2">1</span><span class="s1">)) - (Integer.parseInt(hero.getHeight().substring(</span><span class="s2">2</span><span class="s1">)) / </span><span class="s2">12</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">oppHeight = Integer.parseInt(opp.getHeight().substring(</span><span class="s2">0</span><span class="s0">, </span><span class="s2">1</span><span class="s1">)) - (Integer.parseInt(opp.getHeight().substring(</span><span class="s2">2</span><span class="s1">)) / </span><span class="s2">12</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">chance = (hero.getThreePointPercentage() * ((</span><span class="s0">double</span><span class="s1">) hero.getRating()) / ((</span><span class="s0">double</span><span class="s1">) opp.getRating())) + (heroHeight / </span><span class="s2">7</span><span class="s1">) / </span><span class="s2">10 </span><span class="s1">- (oppHeight / </span><span class="s2">7</span><span class="s1">) / </span><span class="s2">10</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(Math.random() &lt;= chance) {</span>
+            <span class="s3">//code that it goes in</span>
+            <span class="s1">heroScore += </span><span class="s2">3</span><span class="s0">;</span>
+            <span class="s1">notification.setText(hero.getName() + </span><span class="s4">&quot; makes a 3pt shot from way downtown. 3 pts for him!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s3">//code that it missed</span>
+            <span class="s0">if </span><span class="s1">(Math.random() &lt;= </span><span class="s2">0.5</span><span class="s1">) {</span>
+                <span class="s1">notification.setText(</span><span class="s4">&quot;Yikes &quot; </span><span class="s1">+ hero.getName() + </span><span class="s4">&quot; was blocked by &quot; </span><span class="s1">+ opp.getName() + </span><span class="s4">&quot;!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                <span class="s1">notification.setText(</span><span class="s4">&quot;Tough Luck, &quot; </span><span class="s1">+ hero.getName() + </span><span class="s4">&quot; missed the shot.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+        <span class="s1">updateScore()</span><span class="s0">;</span>
+        <span class="s1">switchControls(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">checkBattleComplete()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private void </span><span class="s1">updateScore() {</span>
+        <span class="s1">hero_score.setText(Integer.toString(heroScore))</span><span class="s0">;</span>
+        <span class="s1">opp_score.setText(Integer.toString(oppScore))</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@FXML</span>
+    <span class="s0">private void </span><span class="s1">runOppOffense() {</span>
+        <span class="s0">int </span><span class="s1">pick = </span><span class="s2">0</span><span class="s0">;</span>
+        <span class="s0">if</span><span class="s1">(opp.getRating()&gt;= </span><span class="s2">3</span><span class="s1">){</span>
+            <span class="s1">String pickedSkill = IntelligentOpponentOffense()</span><span class="s0">;</span>
+            <span class="s0">if</span><span class="s1">(pickedSkill == </span><span class="s4">&quot;layup&quot;</span><span class="s1">){</span>
+                <span class="s1">pick = </span><span class="s2">1</span><span class="s0">;</span>
+            <span class="s1">} </span><span class="s0">else if </span><span class="s1">(pickedSkill  == </span><span class="s4">&quot;power&quot;</span><span class="s1">){</span>
+                <span class="s1">pick = </span><span class="s2">2</span><span class="s0">;</span>
+            <span class="s1">} </span><span class="s0">else if </span><span class="s1">(pickedSkill == </span><span class="s4">&quot;midrange&quot;</span><span class="s1">){</span>
+                <span class="s1">pick = </span><span class="s2">3</span><span class="s0">;</span>
+            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                <span class="s1">pick = </span><span class="s2">4</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s1">pick =(</span><span class="s0">int</span><span class="s1">)(Math.random()*(</span><span class="s2">4 </span><span class="s1">- </span><span class="s2">1</span><span class="s1">+</span><span class="s2">1</span><span class="s1">))+</span><span class="s2">1</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s0">if </span><span class="s1">(pick == </span><span class="s2">1</span><span class="s1">) {</span>
+            <span class="s1">oppLayup()</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else if </span><span class="s1">(pick == </span><span class="s2">2</span><span class="s1">) {</span>
+            <span class="s1">oppDunk()</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else if </span><span class="s1">(pick == </span><span class="s2">3</span><span class="s1">) {</span>
+            <span class="s1">oppMidrange()</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else if </span><span class="s1">(pick ==</span><span class="s2">4</span><span class="s1">){</span>
+            <span class="s1">oppThreePointer()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+    <span class="s0">private </span><span class="s1">String IntelligentOpponentOffense(){</span>
+        <span class="s3">//for the player that is the opponent</span>
+        <span class="s3">//compare each stat to the average for that stat among all opponents</span>
+        <span class="s0">double </span><span class="s1">powerCompare = comparePower(opp)</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">layupCompare = compareLayup(opp)</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">midrangeCompare = compareMidrange(opp)</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">threePointCompare = compareThreePoint(opp)</span><span class="s0">;</span>
+        <span class="s1">ArrayList&lt;Double&gt; comparisons = </span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;()</span><span class="s0">;</span>
+        <span class="s1">comparisons.add(powerCompare)</span><span class="s0">;</span>
+        <span class="s1">comparisons.add(layupCompare)</span><span class="s0">;</span>
+        <span class="s1">comparisons.add(midrangeCompare)</span><span class="s0">;</span>
+        <span class="s1">comparisons.add(threePointCompare)</span><span class="s0">;</span>
+        <span class="s1">ArrayList&lt;String&gt; methodNames = </span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;()</span><span class="s0">;</span>
+        <span class="s1">methodNames.add(</span><span class="s4">&quot;power&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">methodNames.add(</span><span class="s4">&quot;layup&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">methodNames.add(</span><span class="s4">&quot;midrange&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">methodNames.add(</span><span class="s4">&quot;three point&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s3">//for this particular player, rank all of his stats from strongest to weakest -- a sorting algorithm</span>
+        <span class="s1">ArrayList&lt;Double&gt; sortedComparisons = </span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;()</span><span class="s0">;</span>
+        <span class="s1">ArrayList&lt;String&gt; sortedNames = </span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;()</span><span class="s0">;</span>
+        <span class="s0">for</span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s2">1</span><span class="s0">; </span><span class="s1">i&lt;=</span><span class="s2">4</span><span class="s0">; </span><span class="s1">i++){</span>
+            <span class="s0">double </span><span class="s1">max = comparisons.get(</span><span class="s2">0</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s0">int </span><span class="s1">index_of_max = </span><span class="s2">0</span><span class="s0">;</span>
+            <span class="s0">for</span><span class="s1">(</span><span class="s0">int </span><span class="s1">j = </span><span class="s2">0</span><span class="s0">;</span><span class="s1">j&lt;comparisons.size()</span><span class="s0">;</span><span class="s1">j++){</span>
+                <span class="s0">if</span><span class="s1">(max&lt;comparisons.get(j)){</span>
+                    <span class="s1">max = comparisons.get(j)</span><span class="s0">;</span>
+                    <span class="s1">index_of_max = j</span><span class="s0">;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+            <span class="s1">sortedComparisons.add(comparisons.remove(index_of_max))</span><span class="s0">;</span>
+            <span class="s1">sortedNames.add(methodNames.remove(index_of_max))</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s3">//decide what skill will be picked based upon this ranking</span>
+        <span class="s0">int </span><span class="s1">decide =(</span><span class="s0">int</span><span class="s1">)(Math.random()*(</span><span class="s2">10</span><span class="s1">-</span><span class="s2">1</span><span class="s1">+</span><span class="s2">1</span><span class="s1">))+</span><span class="s2">1</span><span class="s0">;</span>
+        <span class="s0">if</span><span class="s1">(decide&lt;=</span><span class="s2">4</span><span class="s1">){</span>
+            <span class="s0">return </span><span class="s1">sortedNames.get(</span><span class="s2">0</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else if </span><span class="s1">(decide&lt;=</span><span class="s2">7</span><span class="s1">){</span>
+            <span class="s0">return </span><span class="s1">sortedNames.get(</span><span class="s2">1</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else if</span><span class="s1">(decide&lt;=</span><span class="s2">9</span><span class="s1">){</span>
+            <span class="s0">return </span><span class="s1">sortedNames.get(</span><span class="s2">2</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s0">return </span><span class="s1">sortedNames.get(</span><span class="s2">3</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+    <span class="s0">private double </span><span class="s1">comparePower(Opponents opponent){</span>
+        <span class="s0">double </span><span class="s1">comparison = </span><span class="s2">0.0</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">avg = </span><span class="s2">0</span><span class="s0">;</span>
+        <span class="s0">for</span><span class="s1">(Opponents o: opponents){</span>
+            <span class="s1">avg+=o.getPower()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s1">avg = avg/opponents.size()</span><span class="s0">;</span>
+        <span class="s1">comparison = opponent.getPower()/avg</span><span class="s0">;</span>
+        <span class="s0">return </span><span class="s1">comparison</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s0">private double </span><span class="s1">compareLayup(Opponents opponent){</span>
+        <span class="s0">double </span><span class="s1">comparison = </span><span class="s2">0.0</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">avg = </span><span class="s2">0</span><span class="s0">;</span>
+        <span class="s0">for</span><span class="s1">(Opponents o: opponents){</span>
+            <span class="s1">avg+=o.getLayupPerc()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s1">avg = avg/opponents.size()</span><span class="s0">;</span>
+        <span class="s1">comparison = opponent.getLayupPerc()/avg</span><span class="s0">;</span>
+        <span class="s0">return </span><span class="s1">comparison</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s0">private double </span><span class="s1">compareMidrange(Opponents opponent){</span>
+        <span class="s0">double </span><span class="s1">comparison = </span><span class="s2">0.0</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">avg = </span><span class="s2">0</span><span class="s0">;</span>
+        <span class="s0">for</span><span class="s1">(Opponents o: opponents){</span>
+            <span class="s1">avg+=o.getMidrange()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s1">avg = avg/opponents.size()</span><span class="s0">;</span>
+        <span class="s1">comparison = opponent.getMidrange()/avg</span><span class="s0">;</span>
+        <span class="s0">return </span><span class="s1">comparison</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s0">private double </span><span class="s1">compareThreePoint(Opponents opponent){</span>
+        <span class="s0">double </span><span class="s1">comparison = </span><span class="s2">0.0</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">avg = </span><span class="s2">0</span><span class="s0">;</span>
+        <span class="s0">for</span><span class="s1">(Opponents o: opponents){</span>
+            <span class="s1">avg+=o.getThreePointPercentage()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s1">avg = avg/opponents.size()</span><span class="s0">;</span>
+        <span class="s1">comparison = opponent.getThreePointPercentage()/avg</span><span class="s0">;</span>
+        <span class="s0">return </span><span class="s1">comparison</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s0">private void </span><span class="s1">switchControls(</span><span class="s0">boolean </span><span class="s1">b) {</span>
+        <span class="s1">layup.setDisable(b)</span><span class="s0">;</span>
+        <span class="s1">dunk.setDisable(b)</span><span class="s0">;</span>
+        <span class="s1">midrange.setDisable(b)</span><span class="s0">;</span>
+        <span class="s1">threePoint.setDisable(b)</span><span class="s0">;</span>
+        <span class="s1">opp_offense.setDisable(!b)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private void </span><span class="s1">oppLayup() {</span>
+        <span class="s0">double </span><span class="s1">heroHeight = Integer.parseInt(hero.getHeight().substring(</span><span class="s2">0</span><span class="s0">, </span><span class="s2">1</span><span class="s1">)) - (Integer.parseInt(hero.getHeight().substring(</span><span class="s2">2</span><span class="s1">)) / </span><span class="s2">12</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">oppHeight = Integer.parseInt(opp.getHeight().substring(</span><span class="s2">0</span><span class="s0">, </span><span class="s2">1</span><span class="s1">)) - (Integer.parseInt(opp.getHeight().substring(</span><span class="s2">2</span><span class="s1">)) / </span><span class="s2">12</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">chance = (opp.getLayupPerc() * ((</span><span class="s0">double</span><span class="s1">) opp.getRating()) / ((</span><span class="s0">double</span><span class="s1">) hero.getRating())) + (oppHeight / </span><span class="s2">7</span><span class="s1">) / </span><span class="s2">10 </span><span class="s1">- (heroHeight / </span><span class="s2">7</span><span class="s1">) / </span><span class="s2">10</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(Math.random() &lt;= chance) {</span>
+            <span class="s3">//code that it goes in</span>
+            <span class="s1">oppScore += </span><span class="s2">2</span><span class="s0">;</span>
+            <span class="s1">notification.setText(opp.getName() + </span><span class="s4">&quot; made a layup. Wah Wah Wahhh&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s3">//code that it missed</span>
+            <span class="s0">if </span><span class="s1">(Math.random() &lt;= </span><span class="s2">0.5</span><span class="s1">) {</span>
+                <span class="s1">notification.setText(</span><span class="s4">&quot;Yay &quot; </span><span class="s1">+ opp.getName() + </span><span class="s4">&quot; was blocked by &quot; </span><span class="s1">+ hero.getName() + </span><span class="s4">&quot;!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                <span class="s1">notification.setText(</span><span class="s4">&quot;Whew, &quot; </span><span class="s1">+ opp.getName() + </span><span class="s4">&quot; missed the shot.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+        <span class="s1">updateScore()</span><span class="s0">;</span>
+        <span class="s1">switchControls(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">checkBattleComplete()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private void </span><span class="s1">oppDunk() {</span>
+        <span class="s0">double </span><span class="s1">heroHeight = Integer.parseInt(hero.getHeight().substring(</span><span class="s2">0</span><span class="s0">, </span><span class="s2">1</span><span class="s1">)) - (Integer.parseInt(hero.getHeight().substring(</span><span class="s2">2</span><span class="s1">)) / </span><span class="s2">12</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">oppHeight = Integer.parseInt(opp.getHeight().substring(</span><span class="s2">0</span><span class="s0">, </span><span class="s2">1</span><span class="s1">)) - (Integer.parseInt(opp.getHeight().substring(</span><span class="s2">2</span><span class="s1">)) / </span><span class="s2">12</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">chance = (((</span><span class="s0">double</span><span class="s1">) opp.getPower() / (</span><span class="s0">double</span><span class="s1">) </span><span class="s2">10</span><span class="s1">) * ((</span><span class="s0">double</span><span class="s1">) opp.getRating()) / ((</span><span class="s0">double</span><span class="s1">) hero.getRating())) + (oppHeight / </span><span class="s2">7</span><span class="s1">) / </span><span class="s2">10 </span><span class="s1">- (heroHeight / </span><span class="s2">7</span><span class="s1">) / </span><span class="s2">10</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(Math.random() &lt;= chance) {</span>
+            <span class="s3">//code that it goes in</span>
+            <span class="s1">oppScore += </span><span class="s2">2</span><span class="s0">;</span>
+            <span class="s1">notification.setText(opp.getName() + </span><span class="s4">&quot; made a dunk. Wah Wah Wahhh&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s3">//code that it missed</span>
+            <span class="s0">if </span><span class="s1">(Math.random() &lt;= </span><span class="s2">0.5</span><span class="s1">) {</span>
+                <span class="s1">notification.setText(</span><span class="s4">&quot;Yay &quot; </span><span class="s1">+ opp.getName() + </span><span class="s4">&quot; was blocked by &quot; </span><span class="s1">+ hero.getName() + </span><span class="s4">&quot;!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                <span class="s1">notification.setText(</span><span class="s4">&quot;Whew, &quot; </span><span class="s1">+ opp.getName() + </span><span class="s4">&quot; missed the shot.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+        <span class="s1">updateScore()</span><span class="s0">;</span>
+        <span class="s1">switchControls(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">checkBattleComplete()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private void </span><span class="s1">oppMidrange() {</span>
+        <span class="s0">double </span><span class="s1">heroHeight = Integer.parseInt(hero.getHeight().substring(</span><span class="s2">0</span><span class="s0">, </span><span class="s2">1</span><span class="s1">)) - (Integer.parseInt(hero.getHeight().substring(</span><span class="s2">2</span><span class="s1">)) / </span><span class="s2">12</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">oppHeight = Integer.parseInt(opp.getHeight().substring(</span><span class="s2">0</span><span class="s0">, </span><span class="s2">1</span><span class="s1">)) - (Integer.parseInt(opp.getHeight().substring(</span><span class="s2">2</span><span class="s1">)) / </span><span class="s2">12</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">chance = (opp.getMidrange() * ((</span><span class="s0">double</span><span class="s1">) opp.getRating()) / ((</span><span class="s0">double</span><span class="s1">) hero.getRating())) + (oppHeight / </span><span class="s2">7</span><span class="s1">) / </span><span class="s2">10 </span><span class="s1">- (heroHeight / </span><span class="s2">7</span><span class="s1">) / </span><span class="s2">10</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(Math.random() &lt;= chance) {</span>
+            <span class="s3">//code that it goes in</span>
+            <span class="s1">oppScore += </span><span class="s2">2</span><span class="s0">;</span>
+            <span class="s1">notification.setText(opp.getName() + </span><span class="s4">&quot; made a midrange. Wah Wah Wahhh&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s3">//code that it missed</span>
+            <span class="s0">if </span><span class="s1">(Math.random() &lt;= </span><span class="s2">0.5</span><span class="s1">) {</span>
+                <span class="s1">notification.setText(</span><span class="s4">&quot;Yay &quot; </span><span class="s1">+ opp.getName() + </span><span class="s4">&quot; was blocked by &quot; </span><span class="s1">+ hero.getName() + </span><span class="s4">&quot;!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                <span class="s1">notification.setText(</span><span class="s4">&quot;Whew, &quot; </span><span class="s1">+ opp.getName() + </span><span class="s4">&quot; missed the shot.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+        <span class="s1">updateScore()</span><span class="s0">;</span>
+        <span class="s1">switchControls(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">checkBattleComplete()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private void </span><span class="s1">oppThreePointer() {</span>
+        <span class="s0">double </span><span class="s1">heroHeight = Integer.parseInt(hero.getHeight().substring(</span><span class="s2">0</span><span class="s0">, </span><span class="s2">1</span><span class="s1">)) - (Integer.parseInt(hero.getHeight().substring(</span><span class="s2">2</span><span class="s1">)) / </span><span class="s2">12</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">oppHeight = Integer.parseInt(opp.getHeight().substring(</span><span class="s2">0</span><span class="s0">, </span><span class="s2">1</span><span class="s1">)) - (Integer.parseInt(opp.getHeight().substring(</span><span class="s2">2</span><span class="s1">)) / </span><span class="s2">12</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">double </span><span class="s1">chance = (opp.getThreePointPercentage() * ((</span><span class="s0">double</span><span class="s1">) opp.getRating()) / ((</span><span class="s0">double</span><span class="s1">) hero.getRating())) + (oppHeight / </span><span class="s2">7</span><span class="s1">) / </span><span class="s2">10 </span><span class="s1">- (heroHeight / </span><span class="s2">7</span><span class="s1">) / </span><span class="s2">10</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(Math.random() &lt;= chance) {</span>
+            <span class="s3">//code that it goes in</span>
+            <span class="s1">oppScore += </span><span class="s2">3</span><span class="s0">;</span>
+            <span class="s1">notification.setText(opp.getName() + </span><span class="s4">&quot; made a three. Wah Wah Wahhh&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s3">//code that it missed</span>
+            <span class="s0">if </span><span class="s1">(Math.random() &lt;= </span><span class="s2">0.5</span><span class="s1">) {</span>
+                <span class="s1">notification.setText(</span><span class="s4">&quot;Yay &quot; </span><span class="s1">+ opp.getName() + </span><span class="s4">&quot;'s three pointer was blocked by &quot; </span><span class="s1">+ hero.getName() + </span><span class="s4">&quot;!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                <span class="s1">notification.setText(</span><span class="s4">&quot;Whew, &quot; </span><span class="s1">+ opp.getName() + </span><span class="s4">&quot; missed the three pointer.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+        <span class="s1">updateScore()</span><span class="s0">;</span>
+        <span class="s1">switchControls(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">checkBattleComplete()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span></pre>
+</body>
+</html>

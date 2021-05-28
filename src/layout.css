@@ -1,0 +1,33 @@
+/* styles for anchor pane */
+.pane{
+    -fx-background-color: black;
+    -fx-font-size: 11pt;
+    -fx-text-fill: gold;
+}
+/* styles for buttons */
+.button{
+  -fx-background-color: black;
+  -fx-border: 1px;
+  -fx-border-color: goldenrod;
+  -fx-border-radius: 10%;
+  -fx-color: white;
+  -fx-text-align: center;
+  -fx-text-decoration: none;
+  -fx-display: inline-block;
+  -fx-font-size: 11px;
+}
+/* styles for title text */
+.text-title{
+    -fx-font-size: 40px;
+    -fx-background-color: black;
+    -fx-color: white;
+    -fx-text-fill: #DAA520;
+}/* styles for text */
+.text{
+    -fx-fill: goldenrod;
+/* styles for labels */
+.label{
+    -fx-fill: goldenrod;
+}
+
+

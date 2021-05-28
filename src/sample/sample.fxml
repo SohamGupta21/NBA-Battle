@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="582.0" prefWidth="962.0" styleClass="pane" stylesheets="@../layout.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <children>
+      <Text layoutX="329.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-title" text="NBA BATTLE!!">
+         <font>
+            <Font name="Ink Free" size="36.0" />
+         </font>
+         <fill>
+            <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+               <stops>
+                  <Stop color="#141414" />
+                  <Stop color="#cdaa1d" offset="1.0" />
+               </stops>
+            </RadialGradient>
+         </fill>
+      </Text>
+      <ListView fx:id="peopleList" layoutX="53.0" layoutY="107.0" onMouseClicked="#viewPlayerAttributes" prefHeight="200.0" prefWidth="200.0" visible="false" />
+      <Text fx:id="choosePlayerText" fill="#2c2a2a" fontSmoothingType="LCD" layoutX="74.0" layoutY="82.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Choose Your Player" visible="false">
+         <font>
+            <Font name="Ink Free" size="20.0" />
+         </font>
+      </Text>
+      <Label fx:id="name_label" layoutX="315.0" layoutY="123.0" text="Name:" visible="false">
+         <font>
+            <Font name="Ink Free" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="school_label" alignment="TOP_LEFT" contentDisplay="CENTER" layoutX="315.0" layoutY="159.0" text="School:" visible="false">
+         <font>
+            <Font name="Ink Free" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="position_label" layoutX="311.0" layoutY="183.0" text="Position:" visible="false">
+         <font>
+            <Font name="Ink Free" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="height_label" layoutX="312.0" layoutY="218.0" text="Height:" visible="false">
+         <font>
+            <Font name="Ink Free" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="skills_label" layoutX="316.0" layoutY="253.0" text="Skillls:" visible="false">
+         <font>
+            <Font name="Ink Free" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="weakness_label" layoutX="306.0" layoutY="279.0" text="Weakness:" visible="false">
+         <font>
+            <Font name="Ink Free" size="14.0" />
+         </font>
+      </Label>
+      <Button fx:id="choosePlayerButton" layoutX="284.0" layoutY="309.0" mnemonicParsing="false" onAction="#chooseCharacter" prefHeight="32.0" prefWidth="101.0" text="Choose Player" visible="false">
+         <font>
+            <Font name="Ink Free" size="14.0" />
+         </font>
+      </Button>
+      <Text fx:id="notification" layoutX="357.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Press start to get started">
+         <font>
+            <Font name="Ink Free" size="18.0" />
+         </font>
+      </Text>
+      <ImageView fx:id="playerImage" fitHeight="172.0" fitWidth="200.0" layoutX="533.0" layoutY="108.0" pickOnBounds="true" preserveRatio="true" style="-fx-border-radius: 10px;" visible="false" />
+      <ImageView fx:id="p1battle" fitHeight="150.0" fitWidth="200.0" layoutX="165.0" layoutY="119.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="p2battle" fitHeight="150.0" fitWidth="200.0" layoutX="612.0" layoutY="119.0" pickOnBounds="true" preserveRatio="true" />
+      <Text fx:id="versus" layoutX="450.0" layoutY="221.0" strokeType="OUTSIDE" strokeWidth="0.0" text="V.S." visible="false">
+         <font>
+            <Font name="Ink Free" size="48.0" />
+         </font>
+      </Text>
+      <Label fx:id="p1name" layoutX="251.0" layoutY="301.0" text="Label" visible="false">
+         <font>
+            <Font name="Ink Free" size="20.0" />
+         </font>
+      </Label>
+      <Label fx:id="p2name" layoutX="698.0" layoutY="293.0" text="Label" visible="false">
+         <font>
+            <Font name="Ink Free" size="20.0" />
+         </font>
+      </Label>
+      <Button fx:id="layup" layoutX="217.0" layoutY="356.0" mnemonicParsing="false" onAction="#layupShot" text="Layup" visible="false" />
+      <Button fx:id="dunk" layoutX="294.0" layoutY="388.0" mnemonicParsing="false" onAction="#dunkShot" text="Dunk" visible="false" />
+      <Button fx:id="midrange" layoutX="277.0" layoutY="356.0" mnemonicParsing="false" onAction="#midrangeShot" text="Midrange" visible="false" />
+      <Button fx:id="threePoint" layoutX="233.0" layoutY="388.0" mnemonicParsing="false" onAction="#threePointShot" text="3 pt" visible="false" />
+      <Text fx:id="score_text" layoutX="400.0" layoutY="397.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Score:" visible="false">
+         <font>
+            <Font name="Ink Free" size="36.0" />
+         </font>
+      </Text>
+      <Label fx:id="hero_score" layoutX="375.0" layoutY="425.0" text="00" visible="false">
+         <font>
+            <Font name="Ink Free" size="33.0" />
+         </font>
+      </Label>
+      <Text fx:id="divider" layoutX="435.0" layoutY="467.0" strokeType="OUTSIDE" strokeWidth="0.0" text="|" visible="false">
+         <font>
+            <Font name="Ink Free" size="50.0" />
+         </font>
+      </Text>
+      <Label fx:id="opp_score" layoutX="468.0" layoutY="425.0" text="00" visible="false">
+         <font>
+            <Font name="Ink Free" size="33.0" />
+         </font>
+      </Label>
+      <Button fx:id="opp_offense" layoutX="752.0" layoutY="409.0" mnemonicParsing="false" onAction="#runOppOffense" text="Opponent Offense" visible="false" />
+      <Label fx:id="show_winner" layoutX="386.0" layoutY="128.0" prefHeight="79.0" prefWidth="36.0" text="&gt;" visible="false">
+         <font>
+            <Font name="Ink Free" size="53.0" />
+         </font>
+      </Label>
+      <Button fx:id="next_battle" layoutX="620.0" layoutY="316.0" mnemonicParsing="false" onAction="#nextBattle" text="Next Battle" visible="false">
+         <font>
+            <Font name="Ink Free" size="24.0" />
+         </font>
+      </Button>
+      <ListView fx:id="skill_upgrade" layoutX="106.0" layoutY="325.0" onMouseClicked="#upgradeHero" prefHeight="79.0" prefWidth="200.0" visible="false" />
+      <Text fx:id="your_stats" layoutX="315.0" layoutY="285.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your stats:" visible="false">
+         <font>
+            <Font name="Ink Free" size="19.0" />
+         </font>
+      </Text>
+      <Label fx:id="rating_stats" layoutX="320.0" layoutY="317.0" text="Rating:" visible="false">
+         <font>
+            <Font name="Ink Free" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="three_point_stats" layoutX="316.0" layoutY="440.0" text="Three-Point" visible="false">
+         <font>
+            <Font name="Ink Free" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="layup_stats" layoutX="320.0" layoutY="346.0" prefHeight="24.0" prefWidth="115.0" text="Layup" visible="false">
+         <font>
+            <Font name="Ink Free" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="power_stats" layoutX="316.0" layoutY="376.0" text="Power" visible="false">
+         <font>
+            <Font name="Ink Free" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="midrange_stats" layoutX="316.0" layoutY="410.0" text="Midrange" visible="false">
+         <font>
+            <Font name="Ink Free" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="players_lost" layoutX="544.0" layoutY="375.0" prefHeight="24.0" prefWidth="418.0" text="You have lost to: Nobody" visible="false">
+         <font>
+            <Font name="Ink Free" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="players_beat" layoutX="543.0" layoutY="346.0" prefHeight="24.0" prefWidth="418.0" text="You have beat: Nobody" visible="false">
+         <font>
+            <Font name="Ink Free" size="14.0" />
+         </font>
+      </Label>
+      <Button fx:id="start_over" layoutX="792.0" layoutY="542.0" mnemonicParsing="false" onAction="#startOver" text="Start Over" visible="false" />
+   </children>
+</AnchorPane>

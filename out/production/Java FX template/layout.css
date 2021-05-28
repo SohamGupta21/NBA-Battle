@@ -1,0 +1,31 @@
+.pane{
+    -fx-background-color: black;
+    -fx-font-size: 11pt;
+    -fx-text-fill: gold;
+}
+.button{
+  -fx-background-color: black;
+  -fx-border: 1px;
+  -fx-border-color: goldenrod;
+  -fx-border-radius: 10%;
+  -fx-color: white;
+  -fx-text-align: center;
+  -fx-text-decoration: none;
+  -fx-display: inline-block;
+  -fx-font-size: 11px;
+}
+
+.text-title{
+    -fx-font-size: 40px;
+    -fx-background-color: black;
+    -fx-color: white;
+    -fx-text-fill: #DAA520;
+}
+.text{
+    -fx-fill: goldenrod;
+}
+.label{
+    -fx-fill: goldenrod;
+}
+
+
